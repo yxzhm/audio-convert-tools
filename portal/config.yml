@@ -1,0 +1,15 @@
+config:
+  speex:
+    container:
+      - none
+      - nuance_frame
+    codec:
+      - wb
+      - nb
+  pcm:
+    container:
+      - none
+    codec:
+      - 8k
+      - 16k
+      - 32k
