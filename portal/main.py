@@ -1,4 +1,6 @@
-import os
+import os.path
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 import aiohttp_jinja2
 import jinja2
