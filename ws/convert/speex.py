@@ -10,13 +10,13 @@ class SpeexConvert:
         codec = {'codec': 'pcm'}
         if self.parameter == 'NB':
             decoder = NBDecoder()
-            codec['rate'] = '8k'
+            codec['rate'] = 8000
         elif self.parameter == 'WB':
             decoder = WBDecoder()
-            codec['rate'] = '16k'
+            codec['rate'] = 16000
         elif self.parameter == 'UWB':
             decoder = UWBDecoder()
-            codec['rate'] = '32k'
+            codec['rate'] = 32000
 
         if decoder:
             return codec, decoder.decode(audio)

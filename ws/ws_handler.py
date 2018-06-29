@@ -39,7 +39,7 @@ async def ws_handler(request):
     except Exception as e:
         print(e)
     finally:
-        ws.close()
+        await ws.close()
 
 
 class MessageHandler:

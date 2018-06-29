@@ -1,3 +1,4 @@
 aiohttp==3.3.2
 speex
 pyyaml
+aiohttp_jinja2
