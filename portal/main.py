@@ -27,7 +27,8 @@ if __name__ == '__main__':
 
     app = web.Application()
     app.add_routes(routes)
-    routes.static('', os.path.dirname(os.path.abspath(__file__)) + '/pages/', show_index=True)
 
-    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader(os.path.dirname(os.path.abspath(__file__)) + '/pages'))
+    app.add_routes([web.static('/', os.path.dirname(os.path.abspath(__file__)) + '/pages', follow_symlinks=True, show_index=True)])
+
+    aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader(os.path.dirname(os.path.abspath(__file__)) + '/pages/'))
     web.run_app(app)
