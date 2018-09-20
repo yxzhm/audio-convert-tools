@@ -13,13 +13,13 @@ def _decode_nuance_container_frame(data):
 
 
 def decode_nuance_container(data):
-    audio = b''
+    audio = []
     pos = 0
     # print(len(server_message.audio))
     while pos < len(data):
         (size_len, packet_len) = _decode_nuance_container_frame(data[pos:])
         # print(size_len, packet_len)
         pos += size_len
-        audio = audio + data[pos:pos + packet_len]
+        audio.append(data[pos:pos + packet_len])
         pos += packet_len
     return audio
