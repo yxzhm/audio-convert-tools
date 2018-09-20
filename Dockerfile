@@ -3,7 +3,7 @@ MAINTAINER Huiming (me@yxzhm.com)
 
 RUN apt-get update
 
-RUN apt-get install build-essential libspeex-dev libspeexdsp-dev libpulse-dev -y
+RUN apt-get install build-essential libspeex-dev libspeexdsp-dev libpulse-dev libopus0 libopus-dev -y
 
 RUN apt-get install python3-dev -y
 
