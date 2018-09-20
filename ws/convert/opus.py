@@ -25,7 +25,7 @@ class OpusConvert:
         if decoder:
             whole_data = b''
             for data in audio:
-                # The maximum frame size for Opus is 120 ms which amounts to 5760 samples at 16 kHz sampling rate.
+                # The maximum frame size for Opus is 120 ms which amounts to 5760 samples at 48 kHz sampling rate.
                 whole_data += decoder.decode(data, 5760)
 
             return codec, whole_data
