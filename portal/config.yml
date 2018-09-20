@@ -6,6 +6,15 @@ config:
     codec:
       - wb
       - nb
+  opus:
+    container:
+      - nuance_frame
+    codec:
+      - 8k
+      - 12k
+      - 16k
+      - 24k
+      - 48k
   pcm:
     container:
       - none

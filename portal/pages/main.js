@@ -41,7 +41,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>\n   {{ title }}\n  </h1>\n</div>\n<p></p>\n<app-player></app-player>\n"
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\r\n<div style=\"text-align:center\">\r\n  <h1>\r\n   {{ title }}\r\n  </h1>\r\n</div>\r\n<p></p>\r\n<app-player></app-player>\r\n"
 
 /***/ }),
 
@@ -185,11 +185,12 @@ var PlayerComponent = /** @class */ (function () {
     }
     PlayerComponent.prototype.ngOnInit = function () {
         this.codecList.push('Speex');
-        this.paraList.push('NB');
-        this.paraList.push('WB');
-        this.paraList.push('UWB');
-        this.containerList.push('None');
-        this.containerList.push('Nuance Frame');
+        // this.paraList.push('NB');
+        // this.paraList.push('WB');
+        // this.paraList.push('UWB');
+        // this.containerList.push('None');
+        // this.containerList.push('Nuance Frame');
+        this.codecList.push('Opus');
     };
     PlayerComponent.prototype.browseFile = function (fileInput) {
         console.log('browser file');
@@ -256,6 +257,23 @@ var PlayerComponent = /** @class */ (function () {
         }
         else {
             this.selectedCodec = this.codecList[0];
+        }
+        this.paraList = [];
+        this.containerList = [];
+        if (this.selectedCodec === 'Speex') {
+            this.paraList.push('NB');
+            this.paraList.push('WB');
+            this.paraList.push('UWB');
+            this.containerList.push('None');
+            this.containerList.push('Nuance Frame');
+        }
+        if (this.selectedCodec === 'Opus') {
+            this.paraList.push('8K');
+            this.paraList.push('12K');
+            this.paraList.push('16K');
+            this.paraList.push('24K');
+            this.paraList.push('48K');
+            this.containerList.push('Nuance Frame');
         }
     };
     PlayerComponent.prototype.paraChange = function ($event) {
