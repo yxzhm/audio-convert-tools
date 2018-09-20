@@ -18,11 +18,10 @@ class SpeexConvert:
             decoder = UWBDecoder()
             codec['rate'] = 32000
 
-        whole_data = b''
-        for data in audio:
-            whole_data += data
-
         if decoder:
-            return codec, decoder.decode(whole_data)
+            whole_data = b''
+            for data in audio:
+                whole_data += decoder.decode(data)
+            return codec, whole_data
         else:
             return None, audio
