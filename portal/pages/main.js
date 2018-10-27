@@ -211,7 +211,7 @@ var PlayerComponent = /** @class */ (function () {
         var query_end = {
             message: 'query_end',
         };
-        this.ws = new WebSocket('ws://' + location.host + '/ws');
+        this.ws = new WebSocket('wss://' + location.host + '/ws');
         this.ws.binaryType = 'arraybuffer';
         this.ws.onopen = function () {
             _this.ws.send(JSON.stringify(query_begin));
