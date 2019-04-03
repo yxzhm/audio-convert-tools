@@ -17,16 +17,17 @@ class SpeexConvert:
         elif self.parameter == 'UWB':
             decoder = UWBDecoder()
             codec['rate'] = 32000
+        vocoded = b''
+        for data in audio:
+            vocoded += data
 
-        if decoder:
-            vocoded = b''
+        if decoder and vocoded and len(vocoded) > 0:
             pcm = b''
             i = 0
-            for data in audio:
-                vocoded += data
-
             while i < len(vocoded):
                 packet_size = self.get_frame_byte_size(vocoded, i)
+                if packet_size == 0:
+                    break
                 pcm += decoder.decode(vocoded[i:i + packet_size])
                 i += packet_size
             return codec, pcm
@@ -34,48 +35,45 @@ class SpeexConvert:
             return None, audio
 
     def get_frame_byte_size(self, vocoded, start_byte_index):
-        if vocoded and len(vocoded) > 0:
+        global_bit_index = start_byte_index * 8
+        total_byte_size = 0
+        terminator_flag = False
+        while int(global_bit_index / 8) < len(vocoded):
+            current_byte_index = int(global_bit_index / 8)
+            current_bit_index = global_bit_index % 8
 
-            global_bit_index = start_byte_index * 8
-            total_byte_size = 0
-            terminator_flag = False
-            while int(global_bit_index / 8) < len(vocoded):
-                current_byte_index = int(global_bit_index / 8)
-                current_bit_index = global_bit_index % 8
+            # Handle two bytes here, in case the model_type and model_id are not in same byte.
+            if current_byte_index < (len(vocoded) - 1):
+                data = ((vocoded[current_byte_index] << 8) & 0xFF00) | (vocoded[current_byte_index + 1] & 0x00FF)
+            else:
+                data = ((vocoded[current_byte_index] << 8) & 0xFF00) | 0x0000
 
-                # Handle two bytes here, in case the model_type and model_id are not in same byte.
-                if current_byte_index < (len(vocoded) - 1):
-                    data = ((vocoded[current_byte_index] << 8) & 0xFF00) | (vocoded[current_byte_index + 1] & 0x00FF)
-                else:
-                    data = ((vocoded[current_byte_index] << 8) & 0xFF00) | 0x0000
+            mode_type = (data >> (16 - current_bit_index - 1)) & 0x01
 
-                mode_type = (data >> (16 - current_bit_index - 1)) & 0x01
+            if mode_type == 0:
+                mode_id = data >> (16 - current_bit_index - 5) & 0x0F
+            elif mode_type == 1:
+                mode_id = data >> (16 - current_bit_index - 4) & 0x07
+            else:
+                raise ValueError("invalid model_id")
 
-                if mode_type == 0:
-                    mode_id = data >> (16 - current_bit_index - 5) & 0x0F
-                elif mode_type == 1:
-                    mode_id = data >> (16 - current_bit_index - 4) & 0x07
-                else:
-                    raise ValueError("invalid model_id")
+            bit_size = self._get_frame_bit_size(mode_type, mode_id)
 
-                bit_size = self._get_frame_bit_size(mode_type, mode_id)
+            if bit_size == -1 and mode_type == 0:
+                terminator_flag = True
+            else:
+                global_bit_index += bit_size
 
-                if bit_size == -1 and mode_type == 0:
-                    terminator_flag = True
-                else:
-                    global_bit_index += bit_size
+            if global_bit_index % 8 == 0:
+                total_byte_size = int(global_bit_index / 8) - start_byte_index
+            else:
+                total_byte_size = int(global_bit_index / 8) - start_byte_index + 1
 
-                if global_bit_index % 8 == 0:
-                    total_byte_size = int(global_bit_index / 8) - start_byte_index
-                else:
-                    total_byte_size = int(global_bit_index / 8) - start_byte_index + 1
+            if terminator_flag:
+                return total_byte_size
 
-                if terminator_flag:
-                    return total_byte_size
+        return total_byte_size
 
-            return total_byte_size
-        else:
-            return len(vocoded)
 
     def _get_frame_bit_size(self, mode_type, model_id):
 
