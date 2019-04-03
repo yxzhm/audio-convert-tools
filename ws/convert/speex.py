@@ -75,7 +75,7 @@ class SpeexConvert:
 
             return total_byte_size
         else:
-            raise ValueError("no speex data")
+            return len(vocoded)
 
     def _get_frame_bit_size(self, mode_type, model_id):
 
@@ -112,8 +112,6 @@ class SpeexConvert:
             return 352
 
         else:
-            if mode_type == 0:
-                return -1
-            # Should not happen
-            raise ValueError("invalid frame")
+            return -1
+
 
