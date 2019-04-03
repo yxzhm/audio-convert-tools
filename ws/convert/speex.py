@@ -23,7 +23,7 @@ class SpeexConvert:
             pcm = b''
             i = 0
             for data in audio:
-                vocoded += decoder.decode(data)
+                vocoded += data
 
             while i < len(vocoded):
                 packet_size = self.get_frame_byte_size(vocoded, i)
