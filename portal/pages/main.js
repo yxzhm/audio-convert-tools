@@ -139,7 +139,7 @@ var AppModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "html,\r\nbody {\r\n  height: 100%;\r\n}\r\n\r\nbody {\r\n  display: flex;\r\n  align-items: center;\r\n  padding-top: 40px;\r\n  padding-bottom: 40px;\r\n  background-color: #f5f5f5;\r\n}\r\n\r\n.form-signin {\r\n  width: 100%;\r\n  max-width: 530px;\r\n  padding: 15px;\r\n  margin: auto;\r\n}\r\n\r\n.btn-file {\r\n  position: relative;\r\n  overflow: hidden;\r\n}\r\n\r\n.btn-file input[type=file] {\r\n  position: absolute;\r\n  top: 0;\r\n  right: 0;\r\n  min-width: 100%;\r\n  min-height: 100%;\r\n  font-size: 100px;\r\n  text-align: right;\r\n  filter: alpha(opacity=0);\r\n  opacity: 0;\r\n  background: red;\r\n  cursor: inherit;\r\n  display: block;\r\n}\r\n\r\ninput[readonly] {\r\n  background-color: white !important;\r\n  cursor: text !important;\r\n}\r\n"
+module.exports = "html,\r\nbody {\r\n  height: 100%;\r\n}\r\n\r\nbody {\r\n  display: flex;\r\n  align-items: center;\r\n  padding-top: 40px;\r\n  padding-bottom: 40px;\r\n  background-color: #f5f5f5;\r\n}\r\n\r\n.form-signin {\r\n  width: 100%;\r\n  max-width: 530px;\r\n  padding: 15px;\r\n  margin: auto;\r\n}\r\n\r\n.btn-file {\r\n  position: relative;\r\n  overflow: hidden;\r\n}\r\n\r\n.btn-file input[type=file] {\r\n  position: absolute;\r\n  top: 0;\r\n  right: 0;\r\n  min-width: 100%;\r\n  min-height: 100%;\r\n  font-size: 100px;\r\n  text-align: right;\r\n  filter: alpha(opacity=0);\r\n  opacity: 0;\r\n  background: red;\r\n  cursor: inherit;\r\n  display: block;\r\n}\r\n\r\ninput[readonly] {\r\n  background-color: white !important;\r\n  cursor: text !important;\r\n}\r\n\r\n.spinner {\r\n  margin: 100px auto 0;\r\n  width: 150px;\r\n  text-align: center;\r\n}\r\n\r\n.spinner > div {\r\n  width: 30px;\r\n  height: 30px;\r\n  background-color: #007bff;\r\n\r\n  border-radius: 100%;\r\n  display: inline-block;\r\n  -webkit-animation: bouncedelay 1.4s infinite ease-in-out;\r\n  animation: bouncedelay 1.4s infinite ease-in-out;\r\n  /* Prevent first frame from flickering when animation starts */\r\n  -webkit-animation-fill-mode: both;\r\n  animation-fill-mode: both;\r\n}\r\n\r\n.spinner .bounce1 {\r\n  -webkit-animation-delay: -0.32s;\r\n  animation-delay: -0.32s;\r\n}\r\n\r\n.spinner .bounce2 {\r\n  -webkit-animation-delay: -0.16s;\r\n  animation-delay: -0.16s;\r\n}\r\n\r\n@-webkit-keyframes bouncedelay {\r\n  0%, 80%, 100% { -webkit-transform: scale(0.0) }\r\n  40% { -webkit-transform: scale(1.0) }\r\n}\r\n\r\n@keyframes bouncedelay {\r\n  0%, 80%, 100% {\r\n    transform: scale(0.0);\r\n    -webkit-transform: scale(0.0);\r\n  } 40% {\r\n      transform: scale(1.0);\r\n      -webkit-transform: scale(1.0);\r\n    }\r\n}\r\n"
 
 /***/ }),
 
@@ -150,7 +150,7 @@ module.exports = "html,\r\nbody {\r\n  height: 100%;\r\n}\r\n\r\nbody {\r\n  dis
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form class=\"form-signin\">\r\n  <div>\r\n    <h4>Select a File</h4>\r\n    <div class=\"input-group\">\r\n                <span class=\"input-group-btn\">\r\n                    <span class=\"btn btn-primary btn-file\">\r\n                        Browse… <input type=\"file\" single=\"\" (change)=\"browseFile($event)\">\r\n                    </span>\r\n                </span>\r\n      <input type=\"text\" class=\"form-control\" readonly=\"\" required=\"\" value=\"{{selectedFile.name}}\">\r\n    </div>\r\n  </div>\r\n  <p></p>\r\n  <select class=\"custom-select d-block w-100\" id=\"codecSelect\" required=\"\" (change)=\"codecChange($event)\">\r\n    <option value=\"\">Choose Codec...</option>\r\n    <option *ngFor=\"let codec of codecList\" [ngValue]=\"codec\">{{codec}}</option>\r\n  </select>\r\n  <p></p>\r\n  <select class=\"custom-select d-block w-100\" id=\"para\" required=\"\" (change)=\"paraChange($event)\">\r\n    <option value=\"\">Choose Parameter...</option>\r\n    <option *ngFor=\"let para of paraList\" [ngValue]=\"para\">{{para}}</option>\r\n  </select>\r\n  <p></p>\r\n  <select class=\"custom-select d-block w-100\" id=\"Container\" required=\"\" (change)=\"containerChange($event)\">\r\n    <option value=\"\">Choose Container...</option>\r\n    <option *ngFor=\"let container of containerList\">{{container}}</option>\r\n  </select>\r\n  <p></p>\r\n  <p></p>\r\n  <button type=\"button\" class=\"btn btn-lg btn-primary btn-block\" (click)=\"sendToServer()\">Covert & Play</button>\r\n  <p class=\"mt-5 mb-3 text-muted\">© 2018</p>\r\n</form>\r\n"
+module.exports = "<form class=\"form-signin\">\r\n  <div>\r\n    <h4>Select a File</h4>\r\n    <div class=\"input-group\">\r\n                <span class=\"input-group-btn\">\r\n                    <span class=\"btn btn-primary btn-file\">\r\n                        Browse… <input type=\"file\" single=\"\" (change)=\"browseFile($event)\">\r\n                    </span>\r\n                </span>\r\n      <input type=\"text\" class=\"form-control\" readonly=\"\" required=\"\" value=\"{{selectedFile.name}}\">\r\n    </div>\r\n  </div>\r\n  <p></p>\r\n  <select class=\"custom-select d-block w-100\" id=\"codecSelect\" required=\"\" (change)=\"codecChange($event)\">\r\n    <option value=\"\">Choose Codec...</option>\r\n    <option *ngFor=\"let codec of codecList\" [ngValue]=\"codec\">{{codec}}</option>\r\n  </select>\r\n  <p></p>\r\n  <select class=\"custom-select d-block w-100\" id=\"para\" required=\"\" (change)=\"paraChange($event)\">\r\n    <option value=\"\">Choose Parameter...</option>\r\n    <option *ngFor=\"let para of paraList\" [ngValue]=\"para\">{{para}}</option>\r\n  </select>\r\n  <p></p>\r\n  <select class=\"custom-select d-block w-100\" id=\"Container\" required=\"\" (change)=\"containerChange($event)\">\r\n    <option value=\"\">Choose Container...</option>\r\n    <option *ngFor=\"let container of containerList\">{{container}}</option>\r\n  </select>\r\n  <p></p>\r\n  <p></p>\r\n  <button type=\"button\" class=\"btn btn-lg btn-primary btn-block\" (click)=\"sendToServer()\">Covert & Play</button>\r\n  <div class=\"spinner\" *ngIf=\"showLoading\">\r\n    <div class=\"bounce1\"></div>\r\n    <div class=\"bounce2\"></div>\r\n    <div class=\"bounce3\"></div>\r\n  </div>\r\n  <p class=\"mt-5 mb-3 text-muted\">© 2018</p>\r\n</form>\r\n"
 
 /***/ }),
 
@@ -182,6 +182,7 @@ var PlayerComponent = /** @class */ (function () {
         this.containerList = [];
         this.selectedFile = null;
         this.ws = null;
+        this.showLoading = false;
     }
     PlayerComponent.prototype.ngOnInit = function () {
         this.codecList.push('Speex');
@@ -191,10 +192,12 @@ var PlayerComponent = /** @class */ (function () {
         // this.containerList.push('None');
         // this.containerList.push('Nuance Frame');
         this.codecList.push('Opus');
+        this.showLoading = false;
     };
     PlayerComponent.prototype.browseFile = function (fileInput) {
         console.log('browser file');
         this.selectedFile = fileInput.target.files[0];
+        this.showLoading = false;
     };
     PlayerComponent.prototype.sendToServer = function () {
         var _this = this;
@@ -211,14 +214,16 @@ var PlayerComponent = /** @class */ (function () {
         var query_end = {
             message: 'query_end',
         };
+        var _ws = this.ws;
+        var _t = this;
         this.ws = new WebSocket('wss://' + location.host + '/ws');
         this.ws.binaryType = 'arraybuffer';
         this.ws.onopen = function () {
+            _t.showLoading = true;
             _this.ws.send(JSON.stringify(query_begin));
             _this.ws.send(fr.result);
             _this.ws.send(JSON.stringify(query_end));
         };
-        var _ws = this.ws;
         var rate = 8000;
         this.ws.onmessage = function (event) {
             console.log(event.data);
@@ -230,6 +235,7 @@ var PlayerComponent = /** @class */ (function () {
                 }
                 if (res['message'] === 'res_end') {
                     console.log('res_end');
+                    _t.showLoading = false;
                     _ws.close();
                 }
             }
@@ -369,7 +375,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\Codes\github\audio-convert-web\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! D:\Dev-NuanceTrusted-2018\Sirius\github\audio-convert-web\src\main.ts */"./src/main.ts");
 
 
 /***/ })
