@@ -216,6 +216,7 @@ var PlayerComponent = /** @class */ (function () {
         };
         var _ws = this.ws;
         var _t = this;
+        _t.showLoading = true;
         this.ws = new WebSocket('wss://' + location.host + '/ws');
         this.ws.binaryType = 'arraybuffer';
         this.ws.onopen = function () {
@@ -254,7 +255,6 @@ var PlayerComponent = /** @class */ (function () {
                 var source = audioContext.createBufferSource();
                 audioBuffer.getChannelData(0).set(audioToPlay);
                 source.buffer = audioBuffer;
-                _t.showLoading = true;
                 source.connect(audioContext.destination);
                 source.start(0);
             }
