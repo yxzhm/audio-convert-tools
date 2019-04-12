@@ -219,12 +219,15 @@ var PlayerComponent = /** @class */ (function () {
         this.ws = new WebSocket('wss://' + location.host + '/ws');
         this.ws.binaryType = 'arraybuffer';
         this.ws.onopen = function () {
-            _t.showLoading = true;
             _this.ws.send(JSON.stringify(query_begin));
             _this.ws.send(fr.result);
             _this.ws.send(JSON.stringify(query_end));
         };
         var rate = 8000;
+        this.ws.onerror = function (event) {
+            _t.showLoading = false;
+            console.log('websocket error');
+        };
         this.ws.onmessage = function (event) {
             console.log(event.data);
             if (typeof (event.data) === 'string') {
@@ -251,6 +254,7 @@ var PlayerComponent = /** @class */ (function () {
                 var source = audioContext.createBufferSource();
                 audioBuffer.getChannelData(0).set(audioToPlay);
                 source.buffer = audioBuffer;
+                _t.showLoading = true;
                 source.connect(audioContext.destination);
                 source.start(0);
             }
