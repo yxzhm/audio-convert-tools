@@ -65,7 +65,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 var AppComponent = /** @class */ (function () {
     function AppComponent() {
-        this.title = 'Audio Convert & Play Toolkit';
+        this.title = 'Audio Online Player';
     }
     AppComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -150,7 +150,7 @@ module.exports = "html,\r\nbody {\r\n  height: 100%;\r\n}\r\n\r\nbody {\r\n  dis
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form class=\"form-signin\">\r\n  <div>\r\n    <h4>Select a File</h4>\r\n    <div class=\"input-group\">\r\n                <span class=\"input-group-btn\">\r\n                    <span class=\"btn btn-primary btn-file\">\r\n                        Browse… <input type=\"file\" single=\"\" (change)=\"browseFile($event)\">\r\n                    </span>\r\n                </span>\r\n      <input type=\"text\" class=\"form-control\" readonly=\"\" required=\"\" value=\"{{selectedFile.name}}\">\r\n    </div>\r\n  </div>\r\n  <p></p>\r\n  <select class=\"custom-select d-block w-100\" id=\"codecSelect\" required=\"\" (change)=\"codecChange($event)\">\r\n    <option value=\"\">Choose Codec...</option>\r\n    <option *ngFor=\"let codec of codecList\" [ngValue]=\"codec\">{{codec}}</option>\r\n  </select>\r\n  <p></p>\r\n  <select class=\"custom-select d-block w-100\" id=\"para\" required=\"\" (change)=\"paraChange($event)\">\r\n    <option value=\"\">Choose Parameter...</option>\r\n    <option *ngFor=\"let para of paraList\" [ngValue]=\"para\">{{para}}</option>\r\n  </select>\r\n  <p></p>\r\n  <select class=\"custom-select d-block w-100\" id=\"Container\" required=\"\" (change)=\"containerChange($event)\">\r\n    <option value=\"\">Choose Container...</option>\r\n    <option *ngFor=\"let container of containerList\">{{container}}</option>\r\n  </select>\r\n  <p></p>\r\n  <p></p>\r\n  <button type=\"button\" class=\"btn btn-lg btn-primary btn-block\" (click)=\"sendToServer()\">Covert & Play</button>\r\n  <div class=\"spinner\" *ngIf=\"showLoading\">\r\n    <div class=\"bounce1\"></div>\r\n    <div class=\"bounce2\"></div>\r\n    <div class=\"bounce3\"></div>\r\n  </div>\r\n  <p class=\"mt-5 mb-3 text-muted\">© 2019</p>\r\n</form>\r\n"
+module.exports = "<form class=\"form-signin\">\r\n  <div>\r\n    <h4>Select a File</h4>\r\n    <div class=\"input-group\">\r\n                <span class=\"input-group-btn\">\r\n                    <span class=\"btn btn-primary btn-file\">\r\n                        Browse… <input type=\"file\" single=\"\" (change)=\"browseFile($event)\">\r\n                    </span>\r\n                </span>\r\n      <input type=\"text\" class=\"form-control\" readonly=\"\" required=\"\" value=\"{{selectedFile.name}}\">\r\n    </div>\r\n  </div>\r\n  <p></p>\r\n  <select class=\"custom-select d-block w-100\" id=\"codecSelect\" required=\"\" (change)=\"codecChange($event)\">\r\n    <option value=\"\">Choose Codec...</option>\r\n    <option *ngFor=\"let codec of codecList\" [ngValue]=\"codec\">{{codec}}</option>\r\n  </select>\r\n  <p></p>\r\n  <select class=\"custom-select d-block w-100\" id=\"para\" required=\"\" (change)=\"paraChange($event)\">\r\n    <option value=\"\">Choose Parameter...</option>\r\n    <option *ngFor=\"let para of paraList\" [ngValue]=\"para\">{{para}}</option>\r\n  </select>\r\n  <p></p>\r\n  <select class=\"custom-select d-block w-100\" id=\"Container\" required=\"\" (change)=\"containerChange($event)\">\r\n    <option value=\"\">Choose Container...</option>\r\n    <option *ngFor=\"let container of containerList\">{{container}}</option>\r\n  </select>\r\n  <p></p>\r\n  <p></p>\r\n  <button type=\"button\" class=\"btn btn-lg btn-primary btn-block\" (click)=\"sendToServer()\">Play it!</button>\r\n\r\n  <div class=\"spinner\" *ngIf=\"showLoading\">\r\n    <div class=\"bounce1\"></div>\r\n    <div class=\"bounce2\"></div>\r\n    <div class=\"bounce3\"></div>\r\n  </div>\r\n  <p></p>\r\n  <p></p>\r\n  <input  #ramSelector name=\"ram\" type=\"range\" id=\"myRange\" value=\"{{customProgress}}\" max=\"100\" class=\"custom-range\" (change)=\"setRam(ramSelector.value)\" *ngIf=\"showPlayer\">\r\n  <h6 *ngIf=\"showPlayer\">{{tip}}</h6>\r\n  <p class=\"text-danger\" *ngIf=\"showError\"><strong>Error Occurred!</strong></p>\r\n  <p class=\"mt-5 mb-3 text-muted\">© 2018-2019</p>\r\n</form>\r\n"
 
 /***/ }),
 
@@ -183,14 +183,20 @@ var PlayerComponent = /** @class */ (function () {
         this.selectedFile = null;
         this.ws = null;
         this.showLoading = false;
+        this.showPlayer = false;
+        this.showError = false;
+        this.playing = false;
+        this.customProgress = 0;
+        this.customProgressStep = 0;
+        this.tip = '';
+        this.audioContext = null;
+        this.source = null;
+        this.audioBuffer = null;
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        this.startTimer();
     }
     PlayerComponent.prototype.ngOnInit = function () {
         this.codecList.push('Speex');
-        // this.paraList.push('NB');
-        // this.paraList.push('WB');
-        // this.paraList.push('UWB');
-        // this.containerList.push('None');
-        // this.containerList.push('Nuance Frame');
         this.codecList.push('Opus');
         this.showLoading = false;
     };
@@ -201,8 +207,16 @@ var PlayerComponent = /** @class */ (function () {
     };
     PlayerComponent.prototype.sendToServer = function () {
         var _this = this;
+        var _t = this;
+        this.customProgress = 0;
+        this.customProgressStep = 0;
+        this.showPlayer = false;
+        this.showLoading = true;
+        this.showError = false;
+        this.tip = "";
         console.log('sending to server');
         console.log(this.selectedCodec);
+        this.stop();
         var query_begin = {
             message: 'query_begin',
             codec: this.selectedCodec,
@@ -215,9 +229,8 @@ var PlayerComponent = /** @class */ (function () {
             message: 'query_end',
         };
         var _ws = this.ws;
-        var _t = this;
-        _t.showLoading = true;
         this.ws = new WebSocket('wss://' + location.host + '/ws');
+        // this.ws = new WebSocket('wss://' + 'audio.yxzhm.com' + '/ws');
         this.ws.binaryType = 'arraybuffer';
         this.ws.onopen = function () {
             _this.ws.send(JSON.stringify(query_begin));
@@ -228,6 +241,13 @@ var PlayerComponent = /** @class */ (function () {
         this.ws.onerror = function (event) {
             _t.showLoading = false;
             console.log('websocket error');
+        };
+        this.ws.onclose = function (event) {
+            _t.showLoading = false;
+            if (!_t.showPlayer) {
+                _t.showError = true;
+            }
+            console.log('ws closed');
         };
         this.ws.onmessage = function (event) {
             console.log(event.data);
@@ -240,7 +260,7 @@ var PlayerComponent = /** @class */ (function () {
                 if (res['message'] === 'res_end') {
                     console.log('res_end');
                     _t.showLoading = false;
-                    _ws.close();
+                    this.close();
                 }
             }
             else {
@@ -249,14 +269,9 @@ var PlayerComponent = /** @class */ (function () {
                 for (var i = 0; i < pcm16Buffer.length; i++) {
                     audioToPlay[i] = pcm16Buffer[i] / 32768;
                 }
-                // audioToPlay.set(event.data, 0);
-                var audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                var audioBuffer = audioContext.createBuffer(1, audioToPlay.length, rate);
-                var source = audioContext.createBufferSource();
-                audioBuffer.getChannelData(0).set(audioToPlay);
-                source.buffer = audioBuffer;
-                source.connect(audioContext.destination);
-                source.start(0);
+                _t.audioBuffer = _t.audioContext.createBuffer(1, audioToPlay.length, rate);
+                _t.audioBuffer.getChannelData(0).set(audioToPlay);
+                _t.play(0);
             }
         };
     };
@@ -302,6 +317,59 @@ var PlayerComponent = /** @class */ (function () {
         }
         else {
             this.selectedContainer = this.containerList[0];
+        }
+    };
+    PlayerComponent.prototype.play = function (progress) {
+        var _t = this;
+        this.stop();
+        this.source = this.audioContext.createBufferSource();
+        this.source.buffer = this.audioBuffer;
+        this.source.connect(this.audioContext.destination);
+        this.source.onended = function (event) {
+            _t.playing = false;
+            console.log('Play Stopped');
+        };
+        if (this.source.buffer.duration > 1) {
+            this.showPlayer = true;
+            this.tip = this.source.buffer.duration + "s";
+            var offset = ((this.source.buffer.duration * progress) / 100).toFixed(2);
+            console.log("progress " + progress);
+            console.log('Play Starting, the duration is ' + this.source.buffer.duration + ' the offset is ' + offset);
+            this.customProgress = +progress;
+            this.customProgressStep = +((100 / this.source.buffer.duration).toFixed(0));
+            this.playing = true;
+            this.source.start(0, offset);
+        }
+        else {
+            _t.showError = true;
+        }
+    };
+    PlayerComponent.prototype.stop = function () {
+        if (this.playing) {
+            console.log('Play Stopping ');
+            this.source.stop(0);
+            this.source.disconnect();
+        }
+    };
+    PlayerComponent.prototype.setRam = function (value) {
+        console.log('Play audio at ' + value + '%');
+        this.play(value);
+    };
+    PlayerComponent.prototype.startTimer = function () {
+        var _t = this;
+        this.pauseTimer();
+        this.interval = setInterval(function () {
+            // console.log("Timer Progress is "+_t.customProgress);
+            // console.log("Timer Progress step is "+_t.customProgressStep);
+            if (_t.customProgressStep > 0 && _t.customProgress < 100) {
+                _t.customProgress = _t.customProgress + _t.customProgressStep;
+            }
+        }, 1000);
+    };
+    PlayerComponent.prototype.pauseTimer = function () {
+        console.log('pauseTimer');
+        if (this.interval != null) {
+            clearInterval(this.interval);
         }
     };
     PlayerComponent = __decorate([
