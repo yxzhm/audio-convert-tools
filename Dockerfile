@@ -1,4 +1,4 @@
-FROM python:3.6.5
+FROM python:3.6.13-slim
 MAINTAINER Huiming (me@yxzhm.com)
 
 RUN apt-get update
